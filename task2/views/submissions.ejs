@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cognifyz - All Submissions</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #888;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        /* Empty state */
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #aaa;
+            font-size: 16px;
+        }
+
+        /* Submission cards */
+        .card {
+            background: #f9f9f9;
+            border-left: 4px solid #667eea;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .card-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .card-number {
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .card-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .detail-item {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .detail-item span {
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Back button */
+        .btn-group {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        a {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        a:hover { opacity: 0.9; }
+
+        .count-badge {
+            background: #4CAF50;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <h1>📋 All Submissions
+            <span class="count-badge"><%= submissions.length %> total</span>
+        </h1>
+        <p class="subtitle">All registered users are shown below</p>
+
+        <!-- If no submissions yet -->
+        <% if (submissions.length === 0) { %>
+            <div class="empty">
+                😕 No submissions yet. 
+                <br><br>
+                <a href="/">Be the first to register!</a>
+            </div>
+        <% } else { %>
+
+            <!-- Loop through all submissions -->
+            <% submissions.forEach((person, index) => { %>
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-name">👤 <%= person.name %></span>
+                        <span class="card-number">#<%= index + 1 %></span>
+                    </div>
+                    <div class="card-details">
+                        <div class="detail-item">
+                            📧 <span>Email:</span> <%= person.email %>
+                        </div>
+                        <div class="detail-item">
+                            📱 <span>Phone:</span> <%= person.phone %>
+                        </div>
+                        <div class="detail-item">
+                            🎂 <span>Age:</span> <%= person.age %>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+
+        <% } %>
+
+        <div class="btn-group">
+            <a href="/">Register New User</a>
+        </div>
+
+    </div>
+</body>
+</html>
