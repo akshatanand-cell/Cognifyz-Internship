@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cognifyz - Form Submitted</title>
+    <style>
+        /* Page background */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Result box */
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 400px;
+            text-align: center;
+        }
+
+        /* Success icon */
+        .success-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        /* Title */
+        h1 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+
+        /* Info box */
+        .info-box {
+            background-color: #f9f9f9;
+            border-left: 4px solid #4CAF50;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: left;
+            border-radius: 4px;
+        }
+
+        /* Labels */
+        .info-box p {
+            margin: 8px 0;
+            color: #555;
+        }
+
+        /* Bold labels */
+        .info-box span {
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Go back button */
+        a {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 12px 30px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        /* Button hover */
+        a:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <!-- Success icon -->
+        <div class="success-icon">✅</div>
+
+        <!-- Title -->
+        <h1>Message Sent!</h1>
+        <p>Thank you for contacting us. Here are your details:</p>
+
+        <!-- Show submitted data -->
+        <div class="info-box">
+            <p><span>Name:</span> <%= name %></p>
+            <p><span>Email:</span> <%= email %></p>
+            <p><span>Message:</span> <%= message %></p>
+        </div>
+
+        <!-- Go back link -->
+        <a href="/">Send Another Message</a>
+
+    </div>
+</body>
+</html>
