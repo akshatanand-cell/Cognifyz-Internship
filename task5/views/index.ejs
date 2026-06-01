@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cognifyz - Student Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f0f2f5;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0; top: 0;
+            width: 250px;
+            height: 100vh;
+            background: linear-gradient(180deg, #1a1a2e, #16213e);
+            padding: 30px 20px;
+            color: white;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: #00d4ff;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .nav-item {
+            padding: 12px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-bottom: 8px;
+            transition: all 0.3s;
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(0,212,255,0.2);
+            color: #00d4ff;
+        }
+
+        /* Main content */
+        .main {
+            margin-left: 250px;
+            padding: 30px;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h2 {
+            color: #333;
+            font-weight: bold;
+        }
+
+        /* Stats cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px 20px;
+            text-align: center;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #00d4ff;
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        /* Search and filter bar */
+        .filter-bar {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-bar input,
+        .filter-bar select {
+            padding: 10px 15px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .filter-bar input:focus,
+        .filter-bar select:focus {
+            border-color: #00d4ff;
+        }
+
+        .filter-bar input { flex: 1; min-width: 200px; }
+
+        /* Table */
+        .table-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .table-header h5 {
+            color: #333;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f8f9fa;
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 13px;
+            color: #555;
+            font-weight: 600;
+            border-bottom: 2px solid #eee;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+            color: #333;
+        }
+
+        tr:hover td { background: #f8f9fa; }
+
+        .grade-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .grade-A { background: #e8f5e9; color: #2e7d32; }
+        .grade-B { background: #e3f2fd; color: #1565c0; }
+        .grade-C { background: #fff3e0; color: #e65100; }
+
+        .btn-edit {
+            background: #e3f2fd;
+            color: #1565c0;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-right: 5px;
+            transition: all 0.3s;
+        }
+
+        .btn-edit:hover { background: #1565c0; color: white; }
+
+        .btn-del {
+            background: #ffebee;
+            color: #c62828;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .btn-del:hover { background: #c62828; color: white; }
+
+        /* Add button */
+        .btn-add {
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,212,255,0.4);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.show { display: flex; }
+
+        .modal-box {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            width: 500px;
+            max-width: 90%;
+            animation: popIn 0.3s ease;
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-box h3 {
+            color: #333;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+
+        .modal-box input,
+        .modal-box select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 15px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .modal-box input:focus,
+        .modal-box select:focus {
+            border-color: #00d4ff;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-save {
+            flex: 1;
+            padding: 12px;
+            background: linear-gradient(135deg, #1a1a2e, #0f3460);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn-save:hover { opacity: 0.9; }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 12px;
+            background: #f0f0f0;
+            color: #555;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+
+        .btn-cancel:hover { background: #ddd; }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 15px 25px;
+            border-radius: 10px;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            z-index: 9999;
+            display: none;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .toast.success { background: #4CAF50; display: block; }
+        .toast.error { background: #f44336; display: block; }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            color: #aaa;
+        }
+
+        .empty-state div { font-size: 50px; margin-bottom: 15px; }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 30px;
+            color: #aaa;
+        }
+
+        /* API info */
+        .api-card {
+            background: #1a1a2e;
+            border-radius: 15px;
+            padding: 25px;
+            color: white;
+            margin-bottom: 25px;
+        }
+
+        .api-card h5 {
+            color: #00d4ff;
+            margin-bottom: 15px;
+        }
+
+        .api-endpoint {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            font-size: 13px;
+        }
+
+        .method {
+            padding: 3px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 11px;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .GET { background: #e8f5e9; color: #2e7d32; }
+        .POST { background: #e3f2fd; color: #1565c0; }
+        .PUT { background: #fff3e0; color: #e65100; }
+        .DELETE { background: #ffebee; color: #c62828; }
+
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main { margin-left: 0; padding: 15px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">🧠 Cognifyz</div>
+        <div class="nav-item active">📊 Dashboard</div>
+        <div class="nav-item">👥 Students</div>
+        <div class="nav-item">📚 Courses</div>
+        <div class="nav-item">⚙️ Settings</div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+
+        <!-- Header -->
+        <div class="page-header">
+            <div>
+                <h2>📊 Student Management</h2>
+                <p style="color:#888; font-size:14px;">
+                    Full REST API Integration
+                </p>
+            </div>
+            <button class="btn-add" onclick="openModal()">
+                + Add Student
+            </button>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid" id="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="stat-total">-</div>
+                <div class="stat-label">Total Students</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="stat-a">-</div>
+                <div class="stat-label">Grade A</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="stat-b">-</div>
+                <div class="stat-label">Grade B</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="stat-c">-</div>
+                <div class="stat-label">Grade C</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="stat-age">-</div>
+                <div class="stat-label">Avg Age</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="stat-courses">-</div>
+                <div class="stat-label">Courses</div>
+            </div>
+        </div>
+
+        <!-- API Endpoints Info -->
+        <div class="api-card">
+            <h5>🌐 REST API Endpoints</h5>
+            <div class="api-endpoint">
+                <span class="method GET">GET</span>
+                <span>/api/students — Get all students</span>
+            </div>
+            <div class="api-endpoint">
+                <span class="method GET">GET</span>
+                <span>/api/students/:id — Get single student</span>
+            </div>
+            <div class="api-endpoint">
+                <span class="method POST">POST</span>
+                <span>/api/students — Create student</span>
+            </div>
+            <div class="api-endpoint">
+                <span class="method PUT">PUT</span>
+                <span>/api/students/:id — Update student</span>
+            </div>
+            <div class="api-endpoint">
+                <span class="method DELETE">DELETE</span>
+                <span>/api/students/:id — Delete student</span>
+            </div>
+            <div class="api-endpoint">
+                <span class="method GET">GET</span>
+                <span>/api/stats — Get statistics</span>
+            </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+            <input type="text" id="search-input"
+                placeholder="🔍 Search by name or email..."
+                oninput="filterStudents()">
+            <select id="filter-course" onchange="filterStudents()">
+                <option value="">All Courses</option>
+                <option>Computer Science</option>
+                <option>Data Science</option>
+                <option>AI & ML</option>
+                <option>Web Development</option>
+                <option>Cybersecurity</option>
+            </select>
+            <select id="filter-grade" onchange="filterStudents()">
+                <option value="">All Grades</option>
+                <option>A</option>
+                <option>B</option>
+                <option>C</option>
+            </select>
+        </div>
+
+        <!-- Students Table -->
+        <div class="table-card">
+            <div class="table-header">
+                <h5>👥 Students List</h5>
+                <span id="result-count" style="color:#888; font-size:13px;"></span>
+            </div>
+            <div id="table-container">
+                <div class="loading">Loading students...</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-box">
+            <h3 id="modal-title">➕ Add New Student</h3>
+            <input type="hidden" id="edit-id">
+            <input type="text" id="input-name" 
+                placeholder="Full Name">
+            <input type="email" id="input-email" 
+                placeholder="Email Address">
+            <select id="input-course">
+                <option value="">Select Course</option>
+                <option>Computer Science</option>
+                <option>Data Science</option>
+                <option>AI & ML</option>
+                <option>Web Development</option>
+                <option>Cybersecurity</option>
+            </select>
+            <select id="input-grade">
+                <option value="">Select Grade</option>
+                <option>A</option>
+                <option>B</option>
+                <option>C</option>
+            </select>
+            <input type="number" id="input-age" 
+                placeholder="Age" min="16" max="50">
+            <div class="modal-buttons">
+                <button class="btn-save" onclick="saveStudent()">
+                    💾 Save
+                </button>
+                <button class="btn-cancel" onclick="closeModal()">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        let editMode = false;
+
+        // ===== LOAD STATS =====
+        async function loadStats() {
+            const res = await fetch('/api/stats');
+            const data = await res.json();
+            const s = data.stats;
+            document.getElementById('stat-total').textContent = s.total;
+            document.getElementById('stat-a').textContent = s.gradeA;
+            document.getElementById('stat-b').textContent = s.gradeB;
+            document.getElementById('stat-c').textContent = s.gradeC;
+            document.getElementById('stat-age').textContent = s.avgAge;
+            document.getElementById('stat-courses').textContent = s.courses;
+        }
+
+        // ===== LOAD STUDENTS =====
+        async function loadStudents(params = '') {
+            const res = await fetch('/api/students' + params);
+            const data = await res.json();
+            renderTable(data.students);
+            document.getElementById('result-count').textContent = 
+                data.count + ' students found';
+        }
+
+        // ===== FILTER STUDENTS =====
+        function filterStudents() {
+            const search = document.getElementById('search-input').value;
+            const course = document.getElementById('filter-course').value;
+            const grade = document.getElementById('filter-grade').value;
+
+            let params = '?';
+            if (search) params += `search=${search}&`;
+            if (course) params += `course=${course}&`;
+            if (grade) params += `grade=${grade}&`;
+
+            loadStudents(params);
+        }
+
+        // ===== RENDER TABLE =====
+        function renderTable(students) {
+            const container = document.getElementById('table-container');
+
+            if (students.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div>📭</div>
+                        <p>No students found</p>
+                    </div>`;
+                return;
+            }
+
+            container.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Course</th>
+                            <th>Grade</th>
+                            <th>Age</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${students.map(s => `
+                            <tr>
+                                <td>${s.id}</td>
+                                <td><strong>${s.name}</strong></td>
+                                <td>${s.email}</td>
+                                <td>${s.course}</td>
+                                <td>
+                                    <span class="grade-badge grade-${s.grade}">
+                                        ${s.grade}
+                                    </span>
+                                </td>
+                                <td>${s.age}</td>
+                                <td>
+                                    <button class="btn-edit" 
+                                        onclick="editStudent(${s.id})">
+                                        ✏️ Edit
+                                    </button>
+                                    <button class="btn-del" 
+                                        onclick="deleteStudent(${s.id})">
+                                        🗑️ Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>`;
+        }
+
+        // ===== OPEN MODAL =====
+        function openModal() {
+            editMode = false;
+            document.getElementById('modal-title').textContent = 
+                '➕ Add New Student';
+            document.getElementById('edit-id').value = '';
+            document.getElementById('input-name').value = '';
+            document.getElementById('input-email').value = '';
+            document.getElementById('input-course').value = '';
+            document.getElementById('input-grade').value = '';
+            document.getElementById('input-age').value = '';
+            document.getElementById('modal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('show');
+        }
+
+        // ===== EDIT STUDENT =====
+        async function editStudent(id) {
+            const res = await fetch('/api/students/' + id);
+            const data = await res.json();
+            const s = data.student;
+
+            editMode = true;
+            document.getElementById('modal-title').textContent = 
+                '✏️ Edit Student';
+            document.getElementById('edit-id').value = s.id;
+            document.getElementById('input-name').value = s.name;
+            document.getElementById('input-email').value = s.email;
+            document.getElementById('input-course').value = s.course;
+            document.getElementById('input-grade').value = s.grade;
+            document.getElementById('input-age').value = s.age;
+            document.getElementById('modal').classList.add('show');
+        }
+
+        // ===== SAVE STUDENT =====
+        async function saveStudent() {
+            const name = document.getElementById('input-name').value;
+            const email = document.getElementById('input-email').value;
+            const course = document.getElementById('input-course').value;
+            const grade = document.getElementById('input-grade').value;
+            const age = document.getElementById('input-age').value;
+
+            if (!name || !email || !course || !grade || !age) {
+                showToast('Please fill all fields!', 'error');
+                return;
+            }
+
+            const body = { name, email, course, grade, age };
+
+            if (editMode) {
+                const id = document.getElementById('edit-id').value;
+                await fetch('/api/students/' + id, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                showToast('Student updated successfully!', 'success');
+            } else {
+                await fetch('/api/students', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                showToast('Student added successfully!', 'success');
+            }
+
+            closeModal();
+            loadStudents();
+            loadStats();
+        }
+
+        // ===== DELETE STUDENT =====
+        async function deleteStudent(id) {
+            if (!confirm('Are you sure you want to delete this student?')) return;
+            await fetch('/api/students/' + id, { method: 'DELETE' });
+            showToast('Student deleted!', 'success');
+            loadStudents();
+            loadStats();
+        }
+
+        // ===== TOAST =====
+        function showToast(msg, type) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.className = 'toast ' + type;
+            setTimeout(() => toast.className = 'toast', 3000);
+        }
+
+        // ===== INIT =====
+        loadStats();
+        loadStudents();
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
