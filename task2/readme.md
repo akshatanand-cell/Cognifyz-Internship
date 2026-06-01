@@ -1,5 +1,3 @@
-## 📁 `task2/README.md`
-
 # 🎨 Task 2 – Inline Styles & Server‑Side Validation
 
 > **Cognifyz Technologies Internship** – Full Stack Development  
