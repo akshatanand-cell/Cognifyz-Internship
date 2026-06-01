@@ -63,7 +63,6 @@ This repository documents my **complete Full Stack Development Internship** at *
 
 All tasks are independent. To run **Task X**:
 
-```bash
 cd taskX          # e.g., cd task4
 npm install       # install dependencies
 node server.js    # or nodemon server.js
