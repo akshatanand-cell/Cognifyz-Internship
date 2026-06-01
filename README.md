@@ -1,4 +1,3 @@
-markdown
 <!-- Hero Section -->
 <p align="center">
   <img src="https://img.shields.io/badge/Cognifyz-Internship-red?style=for-the-badge&logo=internetexplorer&logoColor=white"/>
