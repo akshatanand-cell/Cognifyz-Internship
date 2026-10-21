@@ -15,7 +15,8 @@ app.use(cookieParser());
 app.use(express.static('public'));
 
 // ===== CONNECT TO MONGODB =====
-mongoose.connect('mongodb://akshat:akshat123@ac-eean6lc-shard-00-00.ukklceh.mongodb.net:27017,ac-eean6lc-shard-00-01.ukklceh.mongodb.net:27017,ac-eean6lc-shard-00-02.ukklceh.mongodb.net:27017/cognifyz?ssl=true&replicaSet=atlas-dotaic-shard-0&authSource=admin&appName=Cluster0')
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/cognifyz';
+mongoose.connect(MONGO_URI)
     .then(() => console.log('✅ MongoDB Connected!'))
     .catch(err => console.log('❌ MongoDB Error:', err));
 
